@@ -1,0 +1,46 @@
+node_modules
+# Node modules
+node_modules/
+
+# Output directories
+dist/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Environment variables
+.env
+
+# Build files
+*.cache
+*.temp
+
+# Ignore any file in the .git folder
+.git/
+
+# Specific files
+package-lock.json
+.DS_Store
+
+# Webpack specific files
+*.map
+
+# Temporary files
+*.tmp
+*.swp
+
+# Ignore OS generated files
+Thumbs.db
+Desktop.ini
+
+# Ignore VScode settings
+.vscode/
+
+# Ignore compiled code
+*.out
+*.class
+
+# Miscellaneous
+*.bak
