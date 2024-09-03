@@ -14,10 +14,6 @@ function dom_element_creator(array){
     return created_node_list;
 }
 
-function parent_child_relationship_creator(parent,child){
-    return parent.appendchild(child)
-}
-
 function navbar_render(contents){
     const main_section = dom_element_creator(contents['navbar_main_section']);
     const default_section = dom_element_creator(contents['navbar_default_section']);
