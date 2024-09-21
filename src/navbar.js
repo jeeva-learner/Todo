@@ -1,5 +1,5 @@
-import { local_storage_json as ls} from "./localstorage.js";
-
+import { local_storage_json as ls, saveToLocalStorage} from "./localstorage.js";
+import './style.css';
 /* 
  Function: initial_navbar_render
 */
@@ -74,7 +74,8 @@ function project_name_addition_in_local_storage(obj){
     }
     {
         ls[obj['project_name']] = {};
-        navbar_project_name_render(obj['project_name'])
+        navbar_project_name_render(obj['project_name']);
+        saveToLocalStorage();
     }
     // console.log(ls)
 }
@@ -83,6 +84,7 @@ function navbar_project_name_render(project_name){
     const project_name_handler        = dom_element_creator('div','navbar_project_container');
     const project_delete_button       = dom_element_creator('button','navbar_project_remove',undefined,'-');
     const project_name_display        =  dom_element_creator('div','navbar_project_name',undefined,project_name);
+    project_name_display.setAttribute('title',project_name);
     project_delete_button.addEventListener('click', (e) => {
         // The below closet searches for the class name from itself then it's above ancestors
         const project_to_remove = e.target.closest('.navbar_project_container');
@@ -98,10 +100,11 @@ function navbar_project_name_render(project_name){
 function project_name_removal(current_prj_name){
     if(current_prj_name in ls){
     delete ls[current_prj_name];
+    saveToLocalStorage();
     }
     else{
         alert('No such project exsist');
     }
 };
 
-export {navbar_render,new_project_name_dialog, project_name_addition_in_local_storage as new_prj_name}
+export {navbar_render,new_project_name_dialog, project_name_addition_in_local_storage as new_prj_name, navbar_project_name_render}

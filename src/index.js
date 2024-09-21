@@ -1,5 +1,6 @@
 
-import { navbar_render,new_project_name_dialog, new_prj_name} from "./navbar.js";
+import { navbar_render,new_project_name_dialog, new_prj_name, navbar_project_name_render} from "./navbar.js";
+import { local_storage_json } from "./localstorage.js";
 /* Global variables */
 const navbar_main_contents = { 
 "navbar_main_section"    : [['div','navbar_header','Dashboard'],
@@ -42,6 +43,16 @@ function project_name_export(project_name){
     render_function(navbar,navbar_nodes);
     // New Project Div handler starting place
     const new_project_entry = document.querySelector('.new_project');
+    // The below code is to persist across page reloads if data already present in 
+    // local_stoarage_json and it will render those
+    if (Object.keys(local_storage_json).length > 0) {
+        // Iterate over the projects stored in local_storage_json
+        Object.keys(local_storage_json).forEach((project_name) => {
+            // Render each project in the navbar
+            navbar_project_name_render(project_name);
+        });
+    }
+    // this ends the above block
     new_project_entry.addEventListener('click',()=>{
     new_project_name_dialog();
     const new_prj_dialog = document.querySelector('dialog.project_name');
