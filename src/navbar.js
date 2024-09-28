@@ -78,7 +78,6 @@ function new_project_name_dialog(){
 }
 
 function project_name_addition_in_local_storage(obj){
-    // console.log(obj['project_name']) // Project name
     if(ls[obj['project_name']]){
         alert('Project exsists with same name, please provide new name');
         return;
@@ -88,7 +87,6 @@ function project_name_addition_in_local_storage(obj){
         navbar_project_name_render(obj['project_name']);
         saveToLocalStorage();
     }
-    // console.log(ls)
 }
 
 function navbar_project_name_render(project_name){

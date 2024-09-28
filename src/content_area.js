@@ -85,7 +85,11 @@ function set_attribute(element,type,value){
 ////////////////// Block-Creators ///////////////////////////////////
 
 function input_dialog_creator(){
-    let input_dialog                 = create_dom_element('dialog','to_do_input');
+    let input_dialog                 = document.querySelector('.to_do_input');
+    if (input_dialog) {
+        input_dialog.remove(); // Remove the old one to recreate it
+    }
+    input_dialog                     = create_dom_element('dialog','to_do_input');
     let summary_label                = create_dom_element('label');
     let summary_input                = create_dom_element('input',undefined,'summary_label');   
     summary_label.htmlFor            = 'summary_label';
@@ -134,6 +138,144 @@ function input_dialog_creator(){
     document.querySelector('.content_area').appendChild(input_dialog);
 }
 
+function title_card_render(obj){
+    let input_dialog                        = create_dom_element('dialog','to_do_input_view');
+    let summary_label                       = create_dom_element('div','summary_label_view');
+    let summary_input                       = create_dom_element('div','summary_input_view');   
+    summary_label                           = text_content(summary_label,'Summary');
+    summary_input                           = text_content(summary_input,obj.title);
+    let due_date_label                      = create_dom_element('div','due_date_label_view');
+    let due_date_input                      = create_dom_element('input','due_date_input_view');   
+    due_date_input                          = text_content(due_date_input,obj.due);
+    due_date_label                          = text_content(due_date_label,'Due')
+    let priority_label                      = create_dom_element('div','priority_label_view');
+    let priority_input                      = create_dom_element('div','priority_input_view');   
+    priority_input                          = text_content(priority_input,obj.pri);
+    priority_label                          = text_content(priority_label,'Priority');
+    let is_completed_label                  = create_dom_element('div','is_completed_label_view');
+    let is_completed_input                  = create_dom_element('div','is_completed_input_view');
+    is_completed_label                      = text_content(is_completed_label,'Done');
+    is_completed_input                      = text_content(is_completed_input,obj,completed);
+    let desc_label                          = create_dom_element('div','desc_label_view');
+    desc_label                              = text_content(desc_label,'Description');
+    let desc_input                          = create_dom_element('div','desc_input_view');
+    desc_input                              = text_content(desc_input,obj.description);
+
+    let btn_ctnr    =  create_dom_element('div',undefined,'to_do_buttons');
+    let btn_clse    =  create_dom_element('button',undefined,'close');
+    btn_clse        =  text_content(btn_clse,"Close");
+    btn_clse.addEventListener('click',()=>{
+        document.querySelector('.to_do_input_view').close();
+    });
+    btn_ctnr.append(btn_clse);
+    input_dialog.append(summary_label, summary_input, due_date_label, due_date_input,
+                        priority_label, priority_input, is_completed_label, is_completed_input,
+                        desc_label, desc_input,btn_ctnr);
+    document.querySelector('.content_area').appendChild(input_dialog)
+}
+
+// function title_card_max_view(obj){
+    
+
+// }
+
+function title_card_edit(obj){
+    let input_dialog                 = document.querySelector('.to_do_input');
+    if (input_dialog) {
+        input_dialog.remove(); // Remove the old one to recreate it
+    }
+    input_dialog                           = create_dom_element('dialog','to_do_input');
+    let summary_label                      = create_dom_element('label');
+    let summary_input                      = create_dom_element('input',undefined,'summary_label');   
+    summary_label.htmlFor                  = 'summary_label';
+    summary_label                          = text_content(summary_label,'Summary');
+    set_attribute(summary_input,'input','text');
+    set_attribute(summary_input,'placeholder','Summary should be less than 250 words');
+    set_attribute(summary_input,'minlength','5');
+    set_attribute(summary_input,'maxlength','255'); 
+    summary_input.value                    = obj.title;
+    let due_date_label                     = create_dom_element('label');
+    let due_date_input                     = create_dom_element('input',undefined,'due_date');   
+    due_date_label.htmlFor                 = 'due_date';
+    due_date_label                         = text_content(due_date_label,'Due')
+    set_attribute(due_date_input,'type','date');
+    due_date_input.value                   = obj.due;
+    let priority_label                     = create_dom_element('label');
+    let priority_input                     = create_dom_element('select',undefined,'priority');   
+    priority_label.htmlFor                 = 'Priority';
+    priority_label                         = text_content(priority_label,'Priority')
+    for(let i=0;i<5;i++){
+        let temp_value   = create_dom_element('option');
+        temp_value.value = i;
+        priority_input.appendChild(text_content(temp_value,i));
+    }
+    set_attribute(priority_input,'name','priority');
+    priority_input.value                    = obj.pri;
+    let is_completed_label                  = create_dom_element('label');
+    let is_completed_input                  = create_dom_element('input',undefined,'completed');
+    is_completed_label.htmlFor              = 'completed';
+    is_completed_label                      = text_content(is_completed_label,'Done');
+    set_attribute(is_completed_input,'type','checkbox');
+    is_completed_input.checked              = obj.completed;
+    let desc_label                         = create_dom_element('label');
+    desc_label                             = text_content(desc_label,'Description');
+    let desc_input                         = create_dom_element('textarea',undefined,'description');
+    desc_input.setAttribute('style','resize:None')
+    desc_label.htmlFor                     = 'description';
+    desc_input.value                       = obj.description;
+
+    let btn_ctnr    =  create_dom_element('div',undefined,'to_do_buttons');
+    let btn_cnfrm   =  create_dom_element('button',undefined,'to_do_confirm');
+    let btn_cncl    =  create_dom_element('button',undefined,'to_do_cancel');
+    btn_cnfrm       =  text_content(btn_cnfrm,"Save");
+    btn_cncl        =  text_content(btn_cncl,"Cancel");
+    btn_cnfrm.addEventListener('click',to_do_cnrm);
+    btn_cncl.addEventListener('click',to_do_cncl);
+    btn_ctnr.append(btn_cnfrm,btn_cncl);
+    input_dialog.append(summary_label, summary_input, due_date_label, due_date_input,
+                        priority_label, priority_input, is_completed_label, is_completed_input,
+                        desc_label, desc_input,btn_ctnr);
+    document.querySelector('.content_area').appendChild(input_dialog);
+}
+
+function title_card_delete(obj){
+    let parent       =  document.querySelector('.current_name_display h3').textContent;
+    let key_name     = obj.title;
+    if(key_name in ls[parent]){
+    delete ls[current_prj_name];
+    saveToLocalStorage();
+    }
+    else{
+    alert('No such project exsist');
+    }
+}
+
+function tile_card(project){
+    let finalized_dom = []
+    for(let object in project){
+        let tile_card_container     = create_dom_element('div','tile_card_container');
+        let tile_summary            = create_dom_element('div', 'tile_summary');
+        let tile_btn_cntr           = create_dom_element('div','tile_btn_cntr');
+        let tile_view               = create_dom_element('button','view');
+        let tile_edit               = create_dom_element('button','edit');
+        let tile_dlt                = create_dom_element('button','delete');
+
+        tile_view.addEventListener('click',title_card_render);
+        tile_edit.addEventListener('click',title_card_edit);
+        tile_dlt.addEventListener('click',title_card_delete);
+
+        tile_summary.textContent = object.title;
+        tile_view.textContent    = 'Eye';
+        tile_edit.textContent    = 'Edit';
+        tile_dlt.textContent     = 'del';
+
+        tile_btn_cntr.append(tile_view,tile_edit,tile_dlt);
+        tile_card_container(tile_summary,tile_btn_cntr);
+        finalized_dom.push(tile_card_container);
+    }
+    return finalized_dom;
+}
+
 ////////////////////////////////////////////////////////////////////
 
 ////////////////////Rendering Logic///////////////////////////////////
@@ -161,6 +303,22 @@ function current_project(project_name){
     current_name_display.appendChild(current_project_name);
 }
 
+
+
+function content_area_render(current_project){  // current_project is where this can be added
+    if (document.querySelector('.current_name_display h3') in ls && ls[document.querySelector('.current_name_display h3')].length > 0){
+        let proj         = document.querySelector('.current_name_display h3');
+        let past_element = tile_card(ls[proj]);
+        let contents     = document.querySelector('.current_proj_content');
+        for (let i in past_element){
+            contents.appendChild(i);
+        }
+    }
+    else{
+        document.querySelector('.current_proj_content').textContent = 'Add New Items'
+    }
+}
+
 function new_item_input(){
     let current_project = document.querySelector('.current_name_display h3');
     if(!current_project || current_project.textContent.trim() === '')
@@ -181,6 +339,6 @@ function new_item_input(){
 
 ////////////////////////Export contents////////////////////////////////
 
-export {contentarea_initial_render, current_project, input_dialog_creator}
+export {contentarea_initial_render, current_project, input_dialog_creator, content_area_render}
 
 //////////////////////////////////////////////////////////////////////
