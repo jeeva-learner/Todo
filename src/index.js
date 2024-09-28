@@ -1,6 +1,7 @@
 
 import { navbar_render,new_project_name_dialog, new_prj_name, navbar_project_name_render} from "./navbar.js";
 import { local_storage_json } from "./localstorage.js";
+import { contentarea_initial_render as content, input_dialog_creator as to_do_item } from "./content_area.js";
 /* Global variables */
 const navbar_main_contents = { 
 "navbar_main_section"    : [['div','navbar_header','Dashboard'],
@@ -78,5 +79,12 @@ function project_name_export(project_name){
     });
 });
 
+//content area//
+
+const content_area = document.querySelector('.content_area')
+const default_content_layout = content();
+content_area.appendChild(default_content_layout);
+
+to_do_item()
 })();
 

@@ -1,4 +1,5 @@
 import { local_storage_json as ls, saveToLocalStorage} from "./localstorage.js";
+import { current_project } from "./content_area.js";
 import './style.css';
 /* 
  Function: initial_navbar_render
@@ -6,11 +7,21 @@ import './style.css';
 function initial_navbar_render(array){
     let created_node_list = [];
     array.forEach(([element,class_name,text_to_be_displayed = undefined])=>{
+        if(element == 'p'){
+        let new_element = document.createElement(element);
+        new_element.classList.add(class_name);
+        if(text_to_be_displayed != undefined){
+        new_element.textContent = text_to_be_displayed;}
+        new_element.addEventListener('click',()=>{current_project(text_to_be_displayed)});
+        created_node_list.push(new_element)
+        }
+        else{
         let new_element = document.createElement(element);
         new_element.classList.add(class_name);
         if(text_to_be_displayed != undefined){
         new_element.textContent = text_to_be_displayed;}
         created_node_list.push(new_element)
+        }
     })
     return created_node_list;
 }
@@ -91,6 +102,7 @@ function navbar_project_name_render(project_name){
         project_name_removal(project_to_remove.firstChild.textContent);
         project_to_remove.remove();
     });
+    project_name_display.addEventListener('click',()=>{current_project(project_name)});
     project_name_handler.append(project_name_display,project_delete_button);
     const project_list                = document.querySelector('.project_list');
     project_list.appendChild(project_name_handler);
