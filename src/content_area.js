@@ -240,10 +240,9 @@ function title_card_edit(obj){
 
 function title_card_delete(obj){
     let parent       =  document.querySelector('.current_name_display h3').textContent;
-    let key_name     = obj.title;
-    if(key_name in ls[parent]){
-    delete ls[current_prj_name];
-    saveToLocalStorage();
+    if(obj in ls[parent]){
+    delete ls[parent][obj];
+    save();
     }
     else{
     alert('No such project exsist');
@@ -262,15 +261,19 @@ function tile_card(project){
 
         tile_view.addEventListener('click',title_card_render);
         tile_edit.addEventListener('click',title_card_edit);
-        tile_dlt.addEventListener('click',title_card_delete);
+        tile_dlt.addEventListener('click',(e)=>{
+            const tile_to_be_rmvd            = e.target.closest('.tile_card_container')
+            title_card_delete(object);
+            tile_to_be_rmvd.remove();
+        });
 
-        tile_summary.textContent = object.title;
+        tile_summary.textContent = object;
         tile_view.textContent    = 'Eye';
         tile_edit.textContent    = 'Edit';
         tile_dlt.textContent     = 'del';
 
         tile_btn_cntr.append(tile_view,tile_edit,tile_dlt);
-        tile_card_container(tile_summary,tile_btn_cntr);
+        tile_card_container.append(tile_summary,tile_btn_cntr);
         finalized_dom.push(tile_card_container);
     }
     return finalized_dom;
@@ -301,22 +304,24 @@ function current_project(project_name){
     current_name_display.textContent = '';
     current_project_name.textContent = project_name;
     current_name_display.appendChild(current_project_name);
+    content_area_render()
 }
 
 
 
-function content_area_render(current_project){  // current_project is where this can be added
-    if (document.querySelector('.current_name_display h3') in ls && ls[document.querySelector('.current_name_display h3')].length > 0){
-        let proj         = document.querySelector('.current_name_display h3');
-        let past_element = tile_card(ls[proj]);
-        let contents     = document.querySelector('.current_proj_content');
-        for (let i in past_element){
-            contents.appendChild(i);
+function content_area_render(){  
+    const currentName = document.querySelector('.current_name_display h3').textContent; 
+    if (currentName in ls && Object.keys(ls[currentName]).length > 0) { 
+        let past_elements = tile_card(ls[currentName]); // Get the DOM elements for the items
+        let contents = document.querySelector('.current_proj_content');
+        contents.innerHTML = ''; // Clear previous content
+        for (let element of past_elements) { // Use 'for...of' to append elements
+            contents.appendChild(element);
         }
+    } else {
+        document.querySelector('.current_proj_content').textContent = 'Add New Items';
     }
-    else{
-        document.querySelector('.current_proj_content').textContent = 'Add New Items'
-    }
+
 }
 
 function new_item_input(){
@@ -339,6 +344,6 @@ function new_item_input(){
 
 ////////////////////////Export contents////////////////////////////////
 
-export {contentarea_initial_render, current_project, input_dialog_creator, content_area_render}
+export {contentarea_initial_render, current_project, input_dialog_creator}
 
 //////////////////////////////////////////////////////////////////////
