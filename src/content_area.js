@@ -139,23 +139,26 @@ function input_dialog_creator(){
 }
 
 function title_card_render(obj){
-    let input_dialog                        = create_dom_element('dialog','to_do_input_view');
+    let input_dialog                        = document.querySelector('.to_do_input_view');
+    if(input_dialog){
+    input_dialog.innerHTML                  ='';
+    //input_dialog                            = create_dom_element('dialog','to_do_input_view');
     let summary_label                       = create_dom_element('div','summary_label_view');
     let summary_input                       = create_dom_element('div','summary_input_view');   
     summary_label                           = text_content(summary_label,'Summary');
     summary_input                           = text_content(summary_input,obj.title);
     let due_date_label                      = create_dom_element('div','due_date_label_view');
-    let due_date_input                      = create_dom_element('input','due_date_input_view');   
+    let due_date_input                      = create_dom_element('p','due_date_input_view');   
     due_date_input                          = text_content(due_date_input,obj.due);
     due_date_label                          = text_content(due_date_label,'Due')
     let priority_label                      = create_dom_element('div','priority_label_view');
-    let priority_input                      = create_dom_element('div','priority_input_view');   
+    let priority_input                      = create_dom_element('p','priority_input_view');   
     priority_input                          = text_content(priority_input,obj.pri);
     priority_label                          = text_content(priority_label,'Priority');
     let is_completed_label                  = create_dom_element('div','is_completed_label_view');
     let is_completed_input                  = create_dom_element('div','is_completed_input_view');
     is_completed_label                      = text_content(is_completed_label,'Done');
-    is_completed_input                      = text_content(is_completed_input,obj,completed);
+    is_completed_input                      = text_content(is_completed_input,obj.completed);
     let desc_label                          = create_dom_element('div','desc_label_view');
     desc_label                              = text_content(desc_label,'Description');
     let desc_input                          = create_dom_element('div','desc_input_view');
@@ -172,6 +175,42 @@ function title_card_render(obj){
                         priority_label, priority_input, is_completed_label, is_completed_input,
                         desc_label, desc_input,btn_ctnr);
     document.querySelector('.content_area').appendChild(input_dialog)
+    }
+    else{
+    let input_dialog                        = create_dom_element('dialog','to_do_input_view');
+    let summary_label                       = create_dom_element('div','summary_label_view');
+    let summary_input                       = create_dom_element('div','summary_input_view');   
+    summary_label                           = text_content(summary_label,'Summary');
+    summary_input                           = text_content(summary_input,obj.title);
+    let due_date_label                      = create_dom_element('div','due_date_label_view');
+    let due_date_input                      = create_dom_element('p','due_date_input_view');   
+    due_date_input                          = text_content(due_date_input,obj.due);
+    due_date_label                          = text_content(due_date_label,'Due')
+    let priority_label                      = create_dom_element('div','priority_label_view');
+    let priority_input                      = create_dom_element('p','priority_input_view');   
+    priority_input                          = text_content(priority_input,obj.pri);
+    priority_label                          = text_content(priority_label,'Priority');
+    let is_completed_label                  = create_dom_element('div','is_completed_label_view');
+    let is_completed_input                  = create_dom_element('div','is_completed_input_view');
+    is_completed_label                      = text_content(is_completed_label,'Done');
+    is_completed_input                      = text_content(is_completed_input,obj.completed);
+    let desc_label                          = create_dom_element('div','desc_label_view');
+    desc_label                              = text_content(desc_label,'Description');
+    let desc_input                          = create_dom_element('div','desc_input_view');
+    desc_input                              = text_content(desc_input,obj.description);
+    
+    let btn_ctnr    =  create_dom_element('div',undefined,'to_do_buttons');
+    let btn_clse    =  create_dom_element('button',undefined,'close');
+    btn_clse        =  text_content(btn_clse,"Close");
+    btn_clse.addEventListener('click',()=>{
+        document.querySelector('.to_do_input_view').close();
+    });
+    btn_ctnr.append(btn_clse);
+    input_dialog.append(summary_label, summary_input, due_date_label, due_date_input,
+                        priority_label, priority_input, is_completed_label, is_completed_input,
+                        desc_label, desc_input,btn_ctnr);
+    document.querySelector('.content_area').appendChild(input_dialog)
+    }
 }
 
 // function title_card_max_view(obj){
@@ -180,11 +219,11 @@ function title_card_render(obj){
 // }
 
 function title_card_edit(obj){
-    let input_dialog                 = document.querySelector('.to_do_input');
+    let input_dialog                 = document.querySelector('.to_do_edit');
     if (input_dialog) {
         input_dialog.remove(); // Remove the old one to recreate it
     }
-    input_dialog                           = create_dom_element('dialog','to_do_input');
+    input_dialog                           = create_dom_element('dialog','to_do_edit');
     let summary_label                      = create_dom_element('label');
     let summary_input                      = create_dom_element('input',undefined,'summary_label');   
     summary_label.htmlFor                  = 'summary_label';
@@ -259,8 +298,16 @@ function tile_card(project){
         let tile_edit               = create_dom_element('button','edit');
         let tile_dlt                = create_dom_element('button','delete');
 
-        tile_view.addEventListener('click',title_card_render);
-        tile_edit.addEventListener('click',title_card_edit);
+        tile_view.addEventListener('click',()=>{
+            title_card_render(project[object]);
+            let tile_view        = document.querySelector('.to_do_input_view');
+            tile_view.showModal();
+        });
+        tile_edit.addEventListener('click',()=>{
+            title_card_edit(project[object]);
+            const tile_edit  = document.querySelector('.to_do_edit');
+            tile_edit.showModal();
+        });
         tile_dlt.addEventListener('click',(e)=>{
             const tile_to_be_rmvd            = e.target.closest('.tile_card_container')
             title_card_delete(object);

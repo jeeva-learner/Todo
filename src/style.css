@@ -1,0 +1,8 @@
+.navbar_container{
+    display: flex;  
+}
+.navbar_project_name{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
